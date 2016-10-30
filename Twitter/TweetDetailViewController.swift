@@ -11,6 +11,7 @@ import UIKit
 class TweetDetailViewController: UIViewController {
 
     
+   
     @IBOutlet weak var profileImage: UIImageView!
     @IBOutlet weak var fullName: UILabel!
     @IBOutlet weak var handle: UILabel!
@@ -28,11 +29,13 @@ class TweetDetailViewController: UIViewController {
         if let tweet = tweet {
             profileImage.setImageWith((tweet.user?.profileUrl!)!)
             profileImage.layer.cornerRadius = 3
-            
+            profileImage.clipsToBounds = true
             fullName.text = tweet.user?.name
-            handle.text = "@\(tweet.user?.screenName!)"
+            handle.text = "@\((tweet.user?.screenName)!)"
             tweetDescription.text = tweet.text
             createdDate.text = tweet.formattedTime
+            print("RETWEEET",tweet.retweetCount)
+            print("FAVORITE",tweet.favoritesCount)
             retweetCount.text = "\(tweet.retweetCount ?? 0)"
             favoriteCount.text = "\(tweet.favoritesCount ?? 0)"
         }

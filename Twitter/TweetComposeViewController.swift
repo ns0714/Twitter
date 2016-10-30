@@ -39,6 +39,7 @@ class TweetComposeViewController: UIViewController,UITextViewDelegate {
         self.automaticallyAdjustsScrollViewInsets = false
         userProfilePicture.setImageWith((user.profileUrl)!)
         userProfilePicture.layer.cornerRadius = 3
+        userProfilePicture.clipsToBounds = true
         userHandle.text = "@\((user.screenName)!)"
         userFullName.text = user.name
         tweetText.delegate = self

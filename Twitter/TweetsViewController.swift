@@ -45,8 +45,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.delegate = self
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableViewAutomaticDimension
-        
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -117,6 +115,8 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 print(error)
          })
     }
+    
+    
      /*
     // MARK: - Navigation
 
