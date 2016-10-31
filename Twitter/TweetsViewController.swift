@@ -107,8 +107,7 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tweetComposeViewController(tweetComposeViewController: TweetComposeViewController, didPostTweet tweetText: String) {
 
         let tweet = Tweet(tweetText: tweetText)
-        
-        print("is it showing optional here", (tweet.text)!)
+        print("is it showing optional here", tweet.text)
         TwitterClient.sharedInstance?.updateStatus(tweet: tweet, success: { (tweet) in
                 self.tableView.reloadData()
             }, failure: { (error: Error) in
