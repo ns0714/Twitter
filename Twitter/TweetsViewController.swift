@@ -104,9 +104,9 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     @IBOutlet weak var onComposeTweet: UIBarButtonItem!
     
-    func tweetComposeViewController(tweetComposeViewController: TweetComposeViewController, didPostTweet tweetText: String!) {
+    func tweetComposeViewController(tweetComposeViewController: TweetComposeViewController, didPostTweet tweetText: String) {
 
-        let tweet = Tweet(text: tweetText!)
+        let tweet = Tweet(tweetText: tweetText)
         
         print("is it showing optional here", (tweet.text)!)
         TwitterClient.sharedInstance?.updateStatus(tweet: tweet, success: { (tweet) in

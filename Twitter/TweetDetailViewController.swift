@@ -20,7 +20,11 @@ class TweetDetailViewController: UIViewController {
     @IBOutlet weak var createdTime: UILabel!
     @IBOutlet weak var retweetCount: UILabel!
     @IBOutlet weak var favoriteCount: UILabel!
+
+    @IBOutlet weak var replyImage: UIImageView!
     
+    @IBOutlet weak var favoriteImage: UIImageView!
+    @IBOutlet weak var retweetImage: UIImageView!
     var tweet: Tweet?
     
     override func viewDidLoad() {
@@ -39,6 +43,15 @@ class TweetDetailViewController: UIViewController {
             retweetCount.text = "\(tweet.retweetCount ?? 0)"
             favoriteCount.text = "\(tweet.favoritesCount ?? 0)"
         }
+        
+        let tapRetweet = UITapGestureRecognizer(target: self, action: Selector(("tappedRetweet")))
+        retweetImage.addGestureRecognizer(tapRetweet)
+        retweetImage.isUserInteractionEnabled = true
+        
+        let tapFavorite = UITapGestureRecognizer(target: self, action: Selector(("tappedFavorite")))
+        favoriteImage.addGestureRecognizer(tapFavorite)
+        favoriteImage.isUserInteractionEnabled = true
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,5 +72,36 @@ class TweetDetailViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func tappedRetweet() {
+        var count = tweet?.retweetCount
+        if (tweet?.isRetweeted)! {
+            print("Tapped on RETWEET Image")
+            retweetImage.image = UIImage(named: "retweet_off_icon")
+            retweetCount.text = "\((tweet?.retweetCount)!)"
+            tweet?.isRetweeted = false
+        }else {
+            print("Tapped on RETWEET Image")
+            retweetImage.image = UIImage(named: "retweet_on")
+            retweetCount.text = "\(count!+1)"
+            tweet?.isRetweeted = true
+        }
+    }
+    
+    func tappedFavorite() {
+        var count = tweet?.favoritesCount
+        if (tweet?.isFavorited)! {
+            print("Tapped on FAV Image")
+            favoriteImage.image = UIImage(named: "favorite_off_icon")
+            favoriteCount.text = "\((tweet?.favoritesCount)!)"
+            tweet?.isFavorited = false
+        }else {
+            print("Tapped on FAV Image")
+            favoriteImage.image = UIImage(named: "favorite_on")
+            favoriteCount.text = "\(count!+1)"
+            tweet?.isFavorited = true
+        }
+    }
+
 
 }

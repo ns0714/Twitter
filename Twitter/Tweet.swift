@@ -21,7 +21,7 @@ class Tweet: NSObject {
     var isRetweeted = false
     
     init(dictionary: NSDictionary) {
-        text = (dictionary["text"] as? String)!
+        text = dictionary["text"] as! String
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
         favoritesCount = (dictionary["favorite_count"] as? Int) ?? 0
         user = User.init(dictionary: dictionary["user"] as! NSDictionary)
@@ -37,8 +37,8 @@ class Tweet: NSObject {
         }
     }
     
-    init(text: String!) {
-        self.text = text
+    init(tweetText: String) {
+        text = tweetText
         retweetCount = 0
         favoritesCount = 0
         user = User.currentUser
