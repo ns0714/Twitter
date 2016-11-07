@@ -78,7 +78,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "UserTweetCell", for: indexPath) as! UserTweetCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell", for: indexPath) as! TweetCell
         
         var tweet : Tweet?
         if (indexPath.row < tweets?.count ?? 0) {
