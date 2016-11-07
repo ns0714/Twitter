@@ -17,18 +17,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        if User.currentUser != nil {
+       /*if User.currentUser != nil {
             print("There is a current user")
             let storyboard = UIStoryboard(name: "Main",bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
             
-            window?.rootViewController = vc
-        }
-            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: User.userDidLogoutNotification), object: nil, queue: OperationQueue.main){ (NSNotification) in
+            window?.rootViewController = vc*/
+            //let storyboard = UIStoryboard(name: "Main",bundle: nil)
+            //let hamburgerMenuViewController = storyboard.instantiateViewController(withIdentifier: "HamburgerViewController") as! HamburgerViewController
+            
+            //window?.rootViewController = hamburgerMenuViewController
+        //}
+        
+        let hamburgerViewController = window!.rootViewController as! HamburgerViewController
+        let storyboard = UIStoryboard(name: "Main",bundle: nil)
+        let menuViewController = storyboard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
+        
+        menuViewController.hamburgerViewController = hamburgerViewController
+        hamburgerViewController.menuViewController = menuViewController
+        
+        /*NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: User.userDidLogoutNotification), object: nil, queue: OperationQueue.main){ (NSNotification) in
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let loginController = storyboard.instantiateInitialViewController()
                 self.window?.rootViewController = loginController
-        }
+        }*/
         return true
     }
 

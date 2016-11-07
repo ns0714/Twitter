@@ -28,6 +28,31 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func getUserTimeline(screenName: String,success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        get("1.1/statuses/user_timeline.json", parameters: ["screen_name": screenName], progress: nil, success: { (task:URLSessionDataTask, response: Any?) -> Void in
+            print("USER account: \(response)")
+            
+            let dictionaries = response as! [NSDictionary]
+            let tweets = Tweet.tweetsWithArray(dictionaries: dictionaries)
+            success(tweets)
+            }, failure: { (task: URLSessionDataTask?, error: Error?) -> Void in
+                failure(error!)
+        })
+    }
+    
+    
+    func getMentionsTimeline(success: @escaping ([Tweet]) -> (), failure: @escaping (Error) -> ()) {
+        get("1.1/statuses/mentions_timeline.json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response: Any?) -> Void in
+            print("USER account: \(response)")
+            
+            let dictionaries = response as! [NSDictionary]
+            let tweets = Tweet.tweetsWithArray(dictionaries: dictionaries)
+            success(tweets)
+            }, failure: { (task: URLSessionDataTask?, error: Error?) -> Void in
+                failure(error!)
+        })
+    }
+    
     func getCurrentAccount(success: @escaping (User) -> (), failure: ((NSError) -> ())?) {
         get("1.1/account/verify_credentials.json",
             parameters: nil,
@@ -68,7 +93,7 @@ class TwitterClient: BDBOAuth1SessionManager {
     
     func updateStatus(tweet: Tweet, success: @escaping (Tweet) -> (), failure: @escaping (NSError) -> ()) {
         post("1.1/statuses/update.json",
-             parameters: ["status": tweet.text],
+             parameters: ["status": tweet.text!],
              progress: nil,
              success: { (NSURLSessionDataTask, response: Any?) in
                 let tweet = Tweet(dictionary: response as! NSDictionary)

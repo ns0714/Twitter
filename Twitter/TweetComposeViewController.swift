@@ -15,22 +15,13 @@ import UIKit
 class TweetComposeViewController: UIViewController,UITextViewDelegate {
 
     @IBOutlet weak var userProfilePicture: UIImageView!
-    
     @IBOutlet weak var userHandle: UILabel!
-    
-    @IBOutlet weak var characterCount: UILabel!
-    
     @IBOutlet weak var userFullName: UILabel!
-
     @IBOutlet weak var tweetText: UITextView!
-    
     @IBOutlet weak var tweetButton: UIBarButtonItem!
-   
-    
     @IBOutlet weak var remainingCharacterCount: UIBarButtonItem!
     
     weak var delegate: TweetComposeViewControllerDelegate?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -9,8 +9,12 @@
 import UIKit
 //import MBProgressHUD
 
-class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TweetComposeViewControllerDelegate {
+class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TweetComposeViewControllerDelegate, TweetCellDelegate {
     @IBOutlet weak var tableView: UITableView!
+    var clickedUser: User!
+    
+    var isHomeTimeline : Bool!
+    var isMentionsTimeline : Bool!
     
     var tweets: [Tweet]? {
         didSet {
@@ -28,23 +32,28 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         refreshControl.addTarget(self, action: #selector(refreshControlAction(refreshControl:)), for: UIControlEvents.valueChanged)
         tableView.insertSubview(refreshControl, at: 0)
         
-        TwitterClient.sharedInstance?.getHomeTimeline(success: { (tweets : [Tweet]) in
+        if (isMentionsTimeline == nil) {
+            TwitterClient.sharedInstance?.getHomeTimeline(success: { (tweets : [Tweet]) in
+                self.tweets = tweets
+                self.tableView.reloadData()
+                }, failure: { (error : Error) in
+                    print("ERROR: \(error.localizedDescription)")
+            })
+        } else if (isMentionsTimeline == true){
+        
+        TwitterClient.sharedInstance?.getMentionsTimeline(success: { (tweets : [Tweet]) in
             self.tweets = tweets
-            
-            for tweet in self.tweets!{
-               // print("@@@@@@@@@@@", tweet.user)
-               // print("@@@@@@@@@@@", tweet.text)
-            }
-            
             self.tableView.reloadData()
             }, failure: { (error : Error) in
                 print("ERROR: \(error.localizedDescription)")
         })
-    
+        }
         tableView.dataSource = self
         tableView.delegate = self
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableViewAutomaticDimension
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -64,7 +73,12 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if (indexPath.row < tweets?.count ?? 0) {
             tweet = tweets?[indexPath.row]
             cell.tweet = tweet
+            cell.delegate = self
         }
+        
+       // let tapProfileImage = UITapGestureRecognizer(target: self, action: Selector(("tappedProfileImage")))
+       // cell.profilePictureView.addGestureRecognizer(tapProfileImage)
+       // cell.profilePictureView.isUserInteractionEnabled = true
         return cell
         
     }
@@ -79,13 +93,18 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         })
         
     }
+    
+   // let tapProfileImage = UITapGestureRecognizer(target: self, action: Selector(("tappedProfileImage")))
+    //cellprofilePictureView.addGestureRecognizer(tapFavorite)
+    //profilePictureView.isUserInteractionEnabled = true
+
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+       
         if (segue.identifier == "tweetDetailSegue"){
             let cell = sender as! TweetCell
             let indexPath = tableView.indexPath(for: cell)
             let tweet = tweets![(indexPath! as NSIndexPath).row]
-        
             let navigationController = segue.destination as! UINavigationController
             let tweetDetailViewController = navigationController.topViewController as! TweetDetailViewController
             tweetDetailViewController.tweet = tweet
@@ -93,6 +112,9 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let navigationController = segue.destination as! UINavigationController
             let composeViewController = navigationController.topViewController as! TweetComposeViewController
             composeViewController.delegate = self
+        }else if (segue.identifier == "profileSegue") {
+            let navigationController = segue.destination as! UINavigationController
+            let profileViewController = navigationController.topViewController as! ProfileViewController
         }
     }
     
@@ -115,7 +137,10 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
          })
     }
     
-    
+    func tappedProfileImage() {
+        self.performSegue(withIdentifier: "profileSegue", sender: self)
+    }
+  
      /*
     // MARK: - Navigation
 
@@ -125,5 +150,12 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func tweetCell(tweetCell: TweetCell, didTapUserProfilePicture user: User) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let profileViewController = storyboard.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+        profileViewController.user = user
+        navigationController?.pushViewController(profileViewController, animated: true)
+    }
 
 }

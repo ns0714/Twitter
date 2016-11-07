@@ -8,6 +8,10 @@
 
 import UIKit
 
+@objc protocol TweetCellDelegate {
+    func tweetCell(tweetCell: TweetCell, didTapUserProfilePicture user: User)
+}
+
 class TweetCell: UITableViewCell {
 
     @IBOutlet weak var profilePictureView: UIImageView!
@@ -21,17 +25,22 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var replyImage: UIImageView!
     @IBOutlet weak var favoriteImage: UIImageView!
     
+    weak var delegate: TweetCellDelegate?
+    
+     var onProfile: ((User) -> Void)!
+    
     var tweet: Tweet! {
         didSet {
+        print("Profile image", (tweet.user?.profileUrl)!)
         profilePictureView?.setImageWith((tweet.user?.profileUrl)!)
-        profilePictureView.layer.cornerRadius = 3
-        profilePictureView.clipsToBounds = true
-        fullName.text = tweet.user?.name
-        twitterHandle.text = "@\((tweet.user?.screenName)!)"
-        time.text = tweet.formattedRelativeTime
-        tweetText.text = tweet.text
-        retweetCount.text = String(tweet.retweetCount)
-        favoriteCount.text = String(tweet.favoritesCount)
+        profilePictureView?.layer.cornerRadius = 3
+        profilePictureView?.clipsToBounds = true
+        fullName?.text = tweet.user?.name
+        twitterHandle?.text = "@\((tweet.user?.screenName)!)"
+        time?.text = tweet.formattedRelativeTime
+        tweetText?.text = tweet.text
+        retweetCount?.text = String(tweet.retweetCount)
+        favoriteCount?.text = String(tweet.favoritesCount)
     }
 }
     
@@ -39,13 +48,17 @@ class TweetCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         
-        let tapRetweet = UITapGestureRecognizer(target: self, action: Selector(("tappedRetweet")))
+        let tapRetweet = UITapGestureRecognizer(target: self, action: #selector(TweetCell.tappedRetweet))
         retweetImage.addGestureRecognizer(tapRetweet)
         retweetImage.isUserInteractionEnabled = true
         
-        let tapFavorite = UITapGestureRecognizer(target: self, action: Selector(("tappedFavorite")))
+        let tapFavorite = UITapGestureRecognizer(target: self, action: #selector(TweetCell.tappedFavorite))
         favoriteImage.addGestureRecognizer(tapFavorite)
         favoriteImage.isUserInteractionEnabled = true
+        
+        let tapUserProfilePicture = UITapGestureRecognizer(target: self, action: #selector(TweetCell.tappedProfileImage))
+        profilePictureView.addGestureRecognizer(tapUserProfilePicture)
+        profilePictureView.isUserInteractionEnabled = true
     }
   
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -82,5 +95,9 @@ class TweetCell: UITableViewCell {
             favoriteCount.text = "\(count+1)"
             tweet.isFavorited = true
         }
+    }
+    
+    func tappedProfileImage(tapGesture: UITapGestureRecognizer) {
+        delegate?.tweetCell(tweetCell: self, didTapUserProfilePicture: self.tweet.user!)
     }
 }
