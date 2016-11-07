@@ -15,6 +15,11 @@ The following **required** functionality is completed:
    - [x] Contains a section with the users basic stats: # tweets, # following, # followers
 - [x] Home Timeline
    - [x] Tapping on a user image should bring up that user's profile page
+   
+
+Gif Image
+
+![Alt Text](twitter1.gif)
 
 #Homework 3
 
